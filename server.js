@@ -15,20 +15,9 @@ app.use(morgan('combined'));
 
 // Endpoint to serve the current time
 app.get('/time', (req, res) => {
-    const format = req.query.format || 'iso'; // Default to ISO format
-    let time;
-
-    switch (format) {
-        case 'unix':
-            time = Math.floor(Date.now() / 1000); // Unix timestamp in seconds
-            break;
-        case 'iso':
-        default:
-            time = new Date().toISOString();
-            break;
-    }
-
-    res.json({ time });
+    res.json({
+        time: Date.now()
+    });
 });
 
 // Start the server
