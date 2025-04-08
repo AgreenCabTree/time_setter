@@ -8,9 +8,13 @@ if (isNode) {
 
     async function syncTime() {
         try {
+            const url = `http://${process.argv[2]}:${process.argv[3]}/time`;
+
+            console.log(`Time Server Url: ${url}`)
             // Fetch the current time from the custom server
-            const response = await axios.get('http://localhost:3000/time');
+            const response = await axios.get(url);
             const timeString = response.data.time;
+
 
             // Extract date and time components
             const datePart = timeString.slice(0, 10); // YYYY-MM-DD
@@ -20,7 +24,7 @@ if (isNode) {
             let command;
             if (process.platform === 'win32') {
                 // Windows: Use `date` and `time` commands
-                command = `date ${datePart.replace(/-/g, '/')} && time ${timePart}`;
+                command = `date ${datePart} && time ${timePart}`;
             } else if (process.platform === 'darwin') {
                 // macOS: Use `date` command
                 command = `sudo date "${datePart} ${timePart}"`;
@@ -28,6 +32,8 @@ if (isNode) {
                 // Linux: Use `date` command
                 command = `sudo date --set="${datePart} ${timePart}"`;
             }
+            
+            console.log(`command: ${command}`);
 
             // Execute the command to update the system time
             exec(command, (error, stdout, stderr) => {
